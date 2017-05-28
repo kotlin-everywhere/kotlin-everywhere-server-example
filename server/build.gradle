@@ -1,0 +1,95 @@
+buildscript {
+    ext.kotlin_version = '1.1.2-4'
+    ext.jooq_version = '3.9.2'
+
+    ext.databaseUrl = "jdbc:postgresql://localhost/kotlin-everywhere-server-example"
+    ext.databaseLibrary = 'org.postgresql:postgresql:42.1.1'
+    ext.databaseDriver = 'org.postgresql.Driver'
+
+    def uri = URI.create(databaseUrl.substring(5))
+    ext.databaseUserName = uri.getUserInfo() == null ? System.getenv("USER") : uri.getUserInfo()
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        //noinspection DifferentKotlinGradleVersion
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath databaseLibrary
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "4.2.0"
+    id 'nu.studer.jooq' version '2.0.6'
+    id 'de.fuerstenau.buildconfig' version '1.1.8'
+}
+
+apply plugin: 'idea'
+
+apply plugin: 'kotlin'
+sourceSets {
+    main.kotlin.srcDirs += '../common'
+}
+
+flyway {
+    url = databaseUrl
+}
+
+jooq {
+    version = jooq_version
+    example(sourceSets.main) {
+        jdbc {
+            driver = databaseDriver
+            url = databaseUrl
+            user = databaseUserName
+        }
+        generator {
+            name = 'org.jooq.util.DefaultGenerator'
+            strategy {
+                name = 'org.jooq.util.DefaultGeneratorStrategy'
+            }
+            database {
+                name = 'org.jooq.util.postgres.PostgresDatabase'
+                inputSchema = 'public'
+            }
+            generate {
+                relations = true
+                deprecated = false
+                records = true
+                immutablePojos = true
+                fluentSetters = true
+            }
+            target {
+                packageName = 'example.jooq'
+            }
+        }
+    }
+}
+
+buildConfig {
+    clsName = 'BuildConfig'
+    packageName = 'example'
+    charset = 'UTF-8'
+    buildConfigField 'String', 'DATABASE_URL', databaseUrl
+    buildConfigField 'String', 'DATABASE_USER_NAME', databaseUserName
+    buildConfigField 'String', 'DATABASE_DRIVER', databaseDriver
+}
+
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile "org.slf4j:slf4j-simple:1.7.21"
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile 'com.github.kotlin-everywhere:kotlin-everywhere-server:e6750abb5d'
+
+    compile 'com.zaxxer:HikariCP:2.6.1'
+    compile "org.jooq:jooq:$jooq_version"
+    jooqRuntime databaseLibrary
+    compile databaseLibrary
+}
+
