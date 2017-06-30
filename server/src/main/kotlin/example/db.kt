@@ -26,3 +26,10 @@ private val configuration = DataSourceConnectionProvider(dataSource).let {
 val ctx: DSLContext
     get() = DSL.using(configuration)
 
+
+fun <T> transaction(block: (ctx: DSLContext) -> T): T {
+    return ctx.transactionResult { configuration ->
+        block(DSL.using(configuration))
+    }
+}
+
