@@ -1,6 +1,7 @@
-package example
+package example.server
 
 import com.github.parksungmin.jooqs.Jooqs
+import example.TodoCrate
 import example.jooq.Tables
 import org.jooq.Condition
 import org.jooq.impl.DSL

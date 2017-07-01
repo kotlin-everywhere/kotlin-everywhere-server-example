@@ -1,5 +1,6 @@
-package example
+package example.server
 
+import example.MemberCrate
 import example.jooq.Tables
 import org.jooq.impl.DSL
 import java.util.*

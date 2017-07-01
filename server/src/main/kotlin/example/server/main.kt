@@ -1,6 +1,7 @@
+package example.server
+
 import com.github.kotlin.everywhere.server.runServer
 import example.Root
-import example.impl
 
 fun Root.impl(): Root {
     todo.impl()

@@ -85,7 +85,7 @@ dependencies {
     compile "org.slf4j:slf4j-simple:1.7.21"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile 'com.github.kotlin-everywhere:kotlin-everywhere-server:664e836088'
+    compile 'com.github.kotlin-everywhere:server:93b19970c6'
     compile 'com.github.sungmin-park:jooqs:28d6a95240'
 
     compile 'com.zaxxer:HikariCP:2.6.1'

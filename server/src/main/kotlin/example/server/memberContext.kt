@@ -1,6 +1,8 @@
-package example
+package example.server
 
 import com.github.kotlin.everywhere.server.Box
+import example.MemberContext
+import example.MemberResponse
 import example.jooq.Tables
 import java.util.*
 
